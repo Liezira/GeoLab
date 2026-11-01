@@ -1,0 +1,12 @@
+{
+  "title": "GeoLab SMP - Laboratorium Geometri Interaktif",
+  "language": "id",
+  "description": "Helps Indonesian middle-school students explore geometry with interactive 2D and 3D models, clear explanations, visualized formulas, and guided practice.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
