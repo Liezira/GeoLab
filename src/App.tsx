@@ -231,13 +231,12 @@ function Sidebar({
 
   return (
     <aside className="sidebar">
-      <button className="brand" onClick={() => navigate('home')} aria-label="GeoLab SMP - Beranda">
+      <button className="brand" onClick={() => navigate('home')} aria-label="GeoLab - Beranda">
         <span className="brand-mark">
           <Icon name="prism" size={24} />
         </span>
         <span>
           <strong>GeoLab</strong>
-          <small>SMP</small>
         </span>
       </button>
 
@@ -298,7 +297,7 @@ function Topbar({ page, navigate }: { page: Page; navigate: (p: Page) => void })
         <strong>GeoLab</strong>
       </div>
       <div className="crumbs">
-        <span>GeoLab SMP</span>
+        <span>GeoLab</span>
         <Icon name="chevron" size={14} />
         <strong>{names[page] || 'Materi'}</strong>
       </div>
@@ -345,13 +344,13 @@ function Home({ navigate }: { navigate: (p: Page) => void }) {
     <div className="page home-page">
       <section className="hero">
         <div className="hero-copy">
-          <span className="eyebrow">LABORATORIUM GEOMETRI & ARITMATIKA SMP</span>
+          <span className="eyebrow">LABORATORIUM GEOMETRI & ARITMATIKA</span>
           <h1>
             Lihat bentuknya.<br />
             <em>Pahami konsepnya.</em>
           </h1>
           <p>
-            Platform belajar matematika interaktif SMP: Bangun Datar, Bangun Ruang 3D, Lingkaran, Aritmatika, Teorema Pythagoras, dan Ujian Terstandar 90 Menit.
+            Platform belajar matematika interaktif : Bangun Datar, Bangun Ruang 3D, Lingkaran, Aritmatika, Teorema Pythagoras, dan Ujian Terstandar 90 Menit.
           </p>
           <div className="hero-actions">
             <Button icon="play" onClick={() => navigate('exam_hub')}>
@@ -556,7 +555,7 @@ function ExamHub({
           <span className="eyebrow">SEMESTER & KOMPREHENSIF</span>
           <h2>Tes Ulangan Keseluruhan (35 Soal)</h2>
           <p className="exam-desc">
-            Menguji seluruh 5 pilar materi secara merata untuk mengukur ketuntasan belajar siswa SMP secara menyeluruh.
+            Menguji seluruh 5 pilar materi secara merata untuk mengukur ketuntasan belajar siswa secara menyeluruh.
           </p>
 
           <ul className="exam-specs-list">
@@ -583,7 +582,7 @@ function ExamHub({
             onClick={() => {
               onStartExam({
                 mode: 'final',
-                title: 'Tes Ulangan Keseluruhan Matematika SMP',
+                title: 'Tes Ulangan Keseluruhan Matematika',
                 questionCount: 35,
                 durationMinutes: 90,
               })
