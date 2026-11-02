@@ -58,6 +58,7 @@ type IconName =
   | 'eye'
   | 'rotate'
   | 'menu'
+  | 'close'
   | 'chevron'
   | 'spark'
   | 'target'
@@ -88,6 +89,7 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
     eye: <><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></>,
     rotate: <><path d="M20 11a8 8 0 0 0-14.8-4M4 4v5h5"/><path d="M4 13a8 8 0 0 0 14.8 4M20 20v-5h-5"/></>,
     menu: <><path d="M4 7h16M4 12h16M4 17h16"/></>,
+    close: <><path d="M18 6 6 18M6 6l12 12"/></>,
     chevron: <path d="m9 18 6-6-6-6"/>,
     spark: <><path d="m12 3 1.2 4.2L17 9l-3.8 1.8L12 15l-1.2-4.2L7 9l3.8-1.8L12 3Z"/><path d="m19 15 .6 2 1.9.8-1.9.8-.6 2-.6-2-1.9-.8 1.9-.8.6-2Z"/></>,
     target: <><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></>,
@@ -213,9 +215,13 @@ function ShapeArt({ shape = 'prism', large = false }: { shape?: string; large?: 
 function Sidebar({
   page,
   navigate,
+  isOpen,
+  onClose,
 }: {
   page: Page
   navigate: (page: Page) => void
+  isOpen: boolean
+  onClose: () => void
 }) {
   const items: { label: string; icon: IconName; page: Page }[] = [
     { label: 'Beranda', icon: 'home', page: 'home' },
@@ -230,15 +236,31 @@ function Sidebar({
   ]
 
   return (
-    <aside className="sidebar">
-      <button className="brand" onClick={() => navigate('home')} aria-label="GeoLab - Beranda">
-        <span className="brand-mark">
-          <Icon name="prism" size={24} />
-        </span>
-        <span>
-          <strong>GeoLab</strong>
-        </span>
-      </button>
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+      <div className="sidebar-header">
+        <button
+          className="brand"
+          onClick={() => {
+            navigate('home')
+            onClose()
+          }}
+          aria-label="GeoLab - Beranda"
+        >
+          <span className="brand-mark">
+            <Icon name="prism" size={24} />
+          </span>
+          <span>
+            <strong>GeoLab</strong>
+          </span>
+        </button>
+        <button
+          className="sidebar-close-btn"
+          onClick={onClose}
+          aria-label="Tutup navigasi menu"
+        >
+          <Icon name="close" size={20} />
+        </button>
+      </div>
 
       <nav className="side-nav" aria-label="Navigasi utama">
         <div className="nav-label">RUANG BELAJAR & LAB</div>
@@ -248,7 +270,10 @@ function Sidebar({
             <button
               key={item.label}
               className={`nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => navigate(item.page)}
+              onClick={() => {
+                navigate(item.page)
+                onClose()
+              }}
             >
               <Icon name={item.icon} />
               <span>{item.label}</span>
@@ -263,7 +288,12 @@ function Sidebar({
         </span>
         <strong>Ujian 35 Soal (90 Mnt)</strong>
         <p>Uji pemahaman komprehensifmu sekarang di menu Ujian & Latihan!</p>
-        <button onClick={() => navigate('exam_hub')}>
+        <button
+          onClick={() => {
+            navigate('exam_hub')
+            onClose()
+          }}
+        >
           Buka Ujian <Icon name="arrow" size={14} />
         </button>
       </div>
@@ -271,7 +301,15 @@ function Sidebar({
   )
 }
 
-function Topbar({ page, navigate }: { page: Page; navigate: (p: Page) => void }) {
+function Topbar({
+  page,
+  navigate,
+  onOpenMobileMenu,
+}: {
+  page: Page
+  navigate: (p: Page) => void
+  onOpenMobileMenu: () => void
+}) {
   const names: Record<Page, string> = {
     home: 'Beranda',
     catalog: 'Katalog Materi',
@@ -290,11 +328,25 @@ function Topbar({ page, navigate }: { page: Page; navigate: (p: Page) => void })
 
   return (
     <header className="topbar">
-      <div className="mobile-brand">
-        <span className="brand-mark">
-          <Icon name="prism" size={20} />
-        </span>
-        <strong>GeoLab</strong>
+      <div className="topbar-left">
+        <button
+          className="hamburger-btn"
+          onClick={onOpenMobileMenu}
+          aria-label="Buka navigasi menu"
+        >
+          <Icon name="menu" size={20} />
+        </button>
+        <div
+          className="mobile-brand"
+          onClick={() => navigate('home')}
+          role="button"
+          tabIndex={0}
+        >
+          <span className="brand-mark">
+            <Icon name="prism" size={20} />
+          </span>
+          <strong>GeoLab</strong>
+        </div>
       </div>
       <div className="crumbs">
         <span>GeoLab</span>
@@ -312,30 +364,6 @@ function Topbar({ page, navigate }: { page: Page; navigate: (p: Page) => void })
         </button>
       </div>
     </header>
-  )
-}
-
-function MobileNav({ page, navigate }: { page: Page; navigate: (p: Page) => void }) {
-  const items: { label: string; icon: IconName; page: Page }[] = [
-    { label: 'Beranda', icon: 'home', page: 'home' },
-    { label: 'Datar', icon: 'square', page: 'plane' },
-    { label: 'Ruang', icon: 'cube', page: 'solids' },
-    { label: 'Lingkaran', icon: 'circle', page: 'circle' },
-    { label: 'Ujian', icon: 'quiz', page: 'exam_hub' },
-  ]
-  return (
-    <nav className="mobile-nav" aria-label="Navigasi seluler">
-      {items.map(item => (
-        <button
-          key={item.label}
-          className={page === item.page ? 'active' : ''}
-          onClick={() => navigate(item.page)}
-        >
-          <Icon name={item.icon} />
-          <span>{item.label}</span>
-        </button>
-      ))}
-    </nav>
   )
 }
 
@@ -776,6 +804,7 @@ function Help({ navigate }: { navigate: (p: Page) => void }) {
 
 export default function App() {
   const [page, setPage] = useState<Page>('home')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Active Exam state
   const [activeExamConfig, setActiveExamConfig] = useState<{
@@ -891,14 +920,31 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <Sidebar page={page} navigate={navigate} />
+      {isMobileMenuOpen && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      <Sidebar
+        page={page}
+        navigate={navigate}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
       <div className="app-main">
-        {page !== 'exam_session' && <Topbar page={page} navigate={navigate} />}
+        {page !== 'exam_session' && (
+          <Topbar
+            page={page}
+            navigate={navigate}
+            onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          />
+        )}
         <div key={page} className="page-transition">
           {content}
         </div>
       </div>
-      {page !== 'exam_session' && <MobileNav page={page} navigate={navigate} />}
     </div>
   )
 }
